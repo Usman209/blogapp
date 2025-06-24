@@ -1,1 +1,23 @@
-<p>home works!</p>
+<h2>{{ title }}</h2>
+
+<!-- Property binding -->
+<img [src]="'https://angular.io/assets/images/logos/angular/angular.svg'" alt="Angular Logo" width="100" />
+
+<!-- Event binding -->
+<button (click)="onButtonClick()">Click Me</button>
+
+<!-- Interpolation -->
+<p>You clicked the button {{ clickCount  }} times.</p>
+
+<h2>Reverse a String</h2>
+
+<input type="text" [(ngModel)]="inputText" placeholder="Enter text" />
+
+<button (click)="reverseString()">Reverse</button>
+
+<p *ngIf="reversedText">Reversed: {{ reversedText }}</p>
+
+
+<input type="text" [(ngModel)]="inputForProcessing1" placeholder="Enter text to process" />
+<button (click)="processReversedString(inputForProcessing1)" [disabled]="!inputForProcessing1">Process</button>
+<p *ngIf="processedText">Processed: {{ processedText }}</p>
