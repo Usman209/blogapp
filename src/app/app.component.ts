@@ -10,9 +10,4 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'blog';
 
-
-  onClick(){
-    alert('Clicked')
-  }
-
 }
