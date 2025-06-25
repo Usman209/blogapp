@@ -9,12 +9,14 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { LoginComponent } from './pages/login/login.component';
 import { BlogEditorComponent } from './pages/blog-editor/blog-editor.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'blog/:id', component: BlogDetailComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },  // ✅ Moved above
   { path: 'editor', component: BlogEditorComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFoundComponent },         // ✅ Always last
 ];

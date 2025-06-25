@@ -1,1 +1,26 @@
-<p>login works!</p>
+<div class="login-container">
+  <h2>Login</h2>
+
+  <form (ngSubmit)="onLogin()" class="login-form">
+    <div>
+      <label>Email:</label>
+      <input type="email" [(ngModel)]="email" name="email" required />
+    </div>
+
+    <div>
+      <label>Password:</label>
+      <input type="password" [(ngModel)]="password" name="password" required />
+    </div>
+
+    <button type="submit">Login</button>
+
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <div class="register-link">
+      Don't have an account?
+      <a (click)="goToRegister()" style="cursor: pointer; color: blue; text-decoration: underline;">
+        Register here
+      </a>
+    </div>
+  </form>
+</div>

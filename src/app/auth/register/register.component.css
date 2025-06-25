@@ -1,7 +1,7 @@
-.login-container {
-  max-width: 420px;
-  margin: 60px auto;
-  padding: 30px;
+.register-container {
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 2rem;
   border-radius: 10px;
   border: 1px solid #e0e0e0;
   background-color: #ffffff;
@@ -9,40 +9,39 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-.login-container h2 {
+.register-container h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   color: #333;
 }
 
-.login-form div {
+.register-container div {
   margin-bottom: 1rem;
   display: flex;
   flex-direction: column;
 }
 
-.login-form label {
+.register-container label {
   margin-bottom: 0.5rem;
   font-weight: 500;
   color: #555;
 }
 
-.login-form input {
-  padding: 0.6rem 0.8rem;
+.register-container input {
+  padding: 0.5rem 0.75rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 6px;
   transition: border-color 0.3s ease;
 }
 
-.login-form input:focus {
+.register-container input:focus {
   border-color: #007bff;
   outline: none;
 }
 
-.login-form button {
-  width: 100%;
-  padding: 0.75rem;
+.register-container button {
+  padding: 0.75rem 1rem;
   font-size: 1rem;
   background-color: #007bff;
   color: white;
@@ -52,29 +51,27 @@
   transition: background-color 0.3s ease;
 }
 
-.login-form button:hover {
+.register-container button:hover {
   background-color: #0056b3;
 }
 
-.error {
+.register-container .error {
   color: #d32f2f;
   font-size: 0.875rem;
   text-align: center;
-  margin-top: 1rem;
 }
 
-.register-link {
+.register-container .login-link {
   text-align: center;
-  margin-top: 1.2rem;
+  margin-top: 1rem;
   font-size: 0.9rem;
 }
 
-.register-link a {
+.register-container .login-link a {
   color: #007bff;
   text-decoration: none;
-  font-weight: 500;
 }
 
-.register-link a:hover {
+.register-container .login-link a:hover {
   text-decoration: underline;
 }

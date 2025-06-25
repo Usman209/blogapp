@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "blogId": 1,
+    "author": "john",
+    "content": "Great post!",
+    "createdAt": "2025-06-25T09:00:00Z"
+  },
+  {
+    "id": 2,
+    "blogId": 1,
+    "author": "admin",
+    "content": "Thank you!",
+    "createdAt": "2025-06-25T10:00:00Z"
+  }
+]
