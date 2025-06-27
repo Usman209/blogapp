@@ -1,14 +1,7 @@
 <div class="container">
-  <!-- ⬇️ Add the header component here -->
   <app-header></app-header>
 
-  <!-- Optional: Keep or move nav into header component -->
-  <nav class="nav">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/admin" routerLinkActive="active">Admin</a>
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-    <a routerLink="/editor" routerLinkActive="active">Blog Editor</a>
-  </nav>
+  <!-- Removed <nav> because navigation links are now handled in header -->
 
   <main>
     <router-outlet></router-outlet>

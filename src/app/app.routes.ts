@@ -8,6 +8,7 @@ import { BlogEditorComponent } from './pages/blog-editor/blog-editor.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { BlogListComponent } from './pages/blog-list/blog-list.component'; // 👈 Import this
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +31,12 @@ export const routes: Routes = [
       { path: '', redirectTo: 'blogs', pathMatch: 'full' }           // ✅ Default
     ]
   },
+
+  {
+  path: 'admin/dashboard',
+  component: AdminDashboardComponent,
+  // canActivate: [AuthGuard], // Optional if protected
+},
 
   { path: '**', component: NotFoundComponent }
 ];

@@ -1,1 +1,10 @@
-<p>blog-detail works!</p>
+<div *ngIf="loading">Loading blog...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<div *ngIf="!loading && blog">
+  <h2>{{ blog.title }}</h2>
+  <!-- <p><strong>Author:</strong> {{ blog?.author || 'Unknown' }}</p> -->
+  <p><strong>Published:</strong> {{ blog.createdAt | date:'medium' }}</p>
+  <hr>
+  <p>{{ blog.body }}</p>
+</div>

@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface Blog {
   _id: string;
@@ -22,39 +23,65 @@ export interface Blog {
 })
 export class BlogService {
   private apiUrl = 'http://localhost:4000/api/blog';
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
-  // GET all blogs
+  // ✅ Auth headers helper
+  private getAuthHeaders(): HttpHeaders | undefined {
+    if (!this.isBrowser) return undefined;
+    const token = localStorage.getItem('auth_token');
+    return token ? new HttpHeaders({ 'auth-token': token }) : undefined;
+  }
+
+  // ✅ Get All Blogs (public OR secure depending on token)
   getAll(): Observable<Blog[]> {
-    return this.http.get<{ code: number; message: string; body: Blog[] }>(this.apiUrl).pipe(
-      map((response) => response.body)
-    );
+    const headers = this.getAuthHeaders();
+    const url = headers ? this.apiUrl : `${this.apiUrl}/public`;
+
+    return this.http.get<{ code: number; message: string; body: Blog[] }>(url, {
+      headers: headers || undefined
+    }).pipe(map((res) => res.body));
   }
 
-  // GET blog by ID
+  // ✅ Get Blog by ID (public fallback if unauthenticated)
   getById(id: string): Observable<Blog> {
-    return this.http.get<{ code: number; message: string; body: Blog }>(`${this.apiUrl}/${id}`).pipe(
-      map((response) => response.body)
-    );
+    const headers = this.getAuthHeaders();
+    const url = headers ? `${this.apiUrl}/${id}` : `${this.apiUrl}/public/${id}`;
+
+    return this.http.get<{ code: number; message: string; body: Blog }>(url, {
+      headers: headers || undefined
+    }).pipe(map((res) => res.body));
   }
 
-  // CREATE blog
+  // ✅ Create Blog
   create(data: Partial<Blog>): Observable<Blog> {
-    return this.http.post<{ code: number; message: string; body: Blog }>(this.apiUrl, data).pipe(
-      map((response) => response.body)
-    );
+    return this.http.post<{ code: number; message: string; body: Blog }>(
+      this.apiUrl,
+      data,
+      { headers: this.getAuthHeaders() }
+    ).pipe(map((res) => res.body));
   }
 
-  // UPDATE blog
+  // ✅ Update Blog
   update(id: string, data: Partial<Blog>): Observable<Blog> {
-    return this.http.put<{ code: number; message: string; body: Blog }>(`${this.apiUrl}/${id}`, data).pipe(
-      map((response) => response.body)
-    );
+    return this.http.put<{ code: number; message: string; body: Blog }>(
+      `${this.apiUrl}/${id}`,
+      data,
+      { headers: this.getAuthHeaders() }
+    ).pipe(map((res) => res.body));
   }
 
-  // DELETE blog
+  // ✅ Delete Blog
   delete(id: string): Observable<any> {
-    return this.http.delete<{ code: number; message: string }>(`${this.apiUrl}/${id}`);
+    return this.http.delete<{ code: number; message: string }>(
+      `${this.apiUrl}/${id}`,
+      { headers: this.getAuthHeaders() }
+    );
   }
 }

@@ -1,1 +1,12 @@
-<p>user-profile works!</p>
+<h2>User Profile</h2>
+
+<div *ngIf="user">
+  <p><strong>Name:</strong> {{ user.firstName }} {{ user.lastName }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Role:</strong> {{ user.role }}</p>
+  <!-- <button (click)="logout()">Logout</button> -->
+</div>
+
+<div *ngIf="!user">
+  <p>No user info found.</p>
+</div>

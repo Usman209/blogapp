@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map, of } from 'rxjs';
-import {jwtDecode} from 'jwt-decode';
+import { Observable, BehaviorSubject, map } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface User {
   _id?: string;
@@ -22,51 +23,91 @@ export class UserService {
   private apiUrl = 'http://localhost:4000/api/auth';
   private currentUser: User | null = null;
   private tokenTimer: any = null;
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  private userSubject: BehaviorSubject<User | null>;
+  public user$: Observable<User | null>;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+    const stored = this.isBrowser ? localStorage.getItem('user') : null;
+    const user = stored ? JSON.parse(stored) : null;
+
+    this.userSubject = new BehaviorSubject<User | null>(user);
+    this.user$ = this.userSubject.asObservable();
+
+    if (user) {
+      this.currentUser = user;
+    }
+  }
 
   // ✅ Register user
   register(userData: User): Observable<User> {
     return this.http.post<{ body: User }>(`${this.apiUrl}/register`, userData).pipe(
-      map(response => {
-        const user = response.body;
-        return user;
+      map(response => response.body)
+    );
+  }
+
+  // ✅ Login
+  login(email: string, password: string): Observable<{ token: string; user: any }> {
+    return this.http.post<{ token: string; user: any }>(
+      `${this.apiUrl}/login`,
+      { email, password }
+    ).pipe(
+      map(res => {
+        if (this.isBrowser) {
+          localStorage.setItem('auth_token', res.token);
+          localStorage.setItem('user', JSON.stringify(res.user));
+        }
+        this.currentUser = res.user;
+        this.userSubject.next(res.user);
+        this.setAutoLogoutFromToken(res.token);
+        return res;
       })
     );
   }
 
-  // ✅ Login (optional, if you implement login API)
-// user.service.ts
-login(email: string, password: string): Observable<{ token: string; user: any }> {
-  return this.http.post<{ token: string; user: any }>(
-    'http://localhost:4000/api/auth/login',
-    { email, password }
-  );
-}
-
-
+  // ✅ Get current user
   getCurrentUser(): User | null {
-    if (!this.currentUser) {
-      const stored = localStorage.getItem('user');
-      if (stored) {
-        this.currentUser = JSON.parse(stored);
-      }
-    }
     return this.currentUser;
   }
 
+  // ✅ Is Admin
   isAdmin(): boolean {
     return this.getCurrentUser()?.role === 'ADMIN';
   }
 
+  // ✅ Is logged in
   isLoggedIn(): boolean {
     return !!this.getCurrentUser();
   }
 
-logout(isAuto = false): void {
+  // ✅ Set and broadcast user
+  setUser(user: User): void {
+    this.currentUser = user;
+    if (this.isBrowser) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
+    this.userSubject.next(user);
+  }
+
+  // ✅ Clear user
+  clearUser(): void {
     this.currentUser = null;
-    localStorage.removeItem('user');
-    localStorage.removeItem('auth_token');
+    if (this.isBrowser) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('auth_token');
+    }
+    this.userSubject.next(null);
+  }
+
+  // ✅ Logout
+  logout(isAuto = false): void {
+    this.clearUser();
     clearTimeout(this.tokenTimer);
 
     if (isAuto) {
@@ -76,6 +117,7 @@ logout(isAuto = false): void {
     this.router.navigate(['/login']);
   }
 
+  // ✅ Auto logout by JWT expiration
   setAutoLogoutFromToken(token: string): void {
     try {
       const decoded: any = jwtDecode(token);

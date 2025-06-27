@@ -64,19 +64,37 @@ export class BlogEditorComponent implements OnInit {
   onSubmit(): void {
     if (this.blogForm.invalid) return;
 
-    const formValue = this.blogForm.value;
 
-    const request$ = this.isEditMode && this.blogId
-      ? this.blogService.update(this.blogId, formValue)
-      : this.blogService.create(formValue);
+   const userJson = localStorage.getItem('user'); // or 'authUser', adjust as needed
+   if (!userJson) {
+     alert('User not found in local storage.');
+     return;
+   }
 
-    request$.subscribe({
-      next: () => {
-        this.router.navigate(['/admin/blogs']);
-      },
-      error: () => {
-        alert(this.isEditMode ? 'Update failed.' : 'Creation failed.');
-      }
+   const user = JSON.parse(userJson);
+
+
+   if (!user?.id) {
+     alert('User ID not found in local storage.');
+     return;
+   }
+
+   const formValue = {
+     ...this.blogForm.value,
+     author: user?.id,
+     updatedBy: user?.id,
+     ...(this.isEditMode ? {} : { createdBy: user?.id }) // only set createdBy when creating
+   };
+
+   if (this.isEditMode && this.blogId) {
+     this.blogService.update(this.blogId, formValue).subscribe(() => {
+       this.router.navigate(['/admin/blogs']);
+    });
+  } else {
+    this.blogService.create(formValue).subscribe(() => {
+      this.router.navigate(['/admin/blogs']);
     });
   }
+  }
+
 }

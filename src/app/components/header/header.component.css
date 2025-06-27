@@ -2,20 +2,70 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f4f4f4;
-  padding: 12px 24px;
-  border-bottom: 1px solid #ddd;
+  padding: 10px 20px;
+  background-color: #f3f3f3;
 }
 
-.user-info {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+.left-links a {
+  margin-right: 15px;
+  text-decoration: none;
+  /* color: #333; */
+  color: black;
 }
 
-.profile-image img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.user-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-name {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 40px;
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 5px 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.dropdown-menu a:hover {
+  background-color: #eee;
+}
+
+.guest-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.guest-actions a {
+  background: #007bff;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.guest-actions a:hover {
+  background: #0056b3;
 }

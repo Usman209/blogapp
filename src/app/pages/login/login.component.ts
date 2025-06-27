@@ -30,11 +30,8 @@ onLogin(): void {
         localStorage.setItem('user', JSON.stringify(user));
         this.userService.setAutoLogoutFromToken(token);
 
-        // if (user.needsPasswordReset) {
-        //   this.router.navigate(['/reset-password']);
-        // } else {
-          this.router.navigate([user.role === 'ADMIN' ? '/admin' : '/']);
-        // }
+        // 🔄 Redirect everyone to /admin/blogs after login
+        this.router.navigate(['/admin/blogs']);
       } else {
         this.errorMessage = 'Invalid login response';
       }
@@ -44,6 +41,7 @@ onLogin(): void {
     }
   });
 }
+
 
 
 

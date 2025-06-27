@@ -1,8 +1,26 @@
-<header class="header-container" *ngIf="user">
-  <div class="user-info">
-    {{ user.firstName }} {{ user.lastName }}
+<header class="header-container">
+  <!-- Left: Home Link -->
+  <div class="left-links">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
   </div>
-  <div class="profile-image">
-    <img [src]="user.profileImage || defaultImage" alt="Profile" />
+
+  <!-- Right: User or Guest -->
+  <div class="right-section">
+    <!-- Logged-in User -->
+    <div class="user-section" *ngIf="user; else guest" tabindex="0" (click)="toggleDropdown()">
+      <span class="user-name">{{ user.firstName }}</span>
+      <div class="dropdown-menu" *ngIf="showDropdown">
+        <a (click)="goToProfile()">Profile</a>
+        <a (click)="logout()">Logout</a>
+      </div>
+    </div>
+
+    <!-- Guest View -->
+    <ng-template #guest>
+      <div class="guest-actions">
+        <a (click)="goToLogin()">Log in</a>
+        <a (click)="goToRegister()">Create account</a>
+      </div>
+    </ng-template>
   </div>
 </header>
