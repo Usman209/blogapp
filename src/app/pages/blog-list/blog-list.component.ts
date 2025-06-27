@@ -36,8 +36,9 @@ goToCreate(): void {
 
 
   editBlog(id: string): void {
-    this.router.navigate(['/admin/update', id]); // Make sure this route exists
-  }
+  this.router.navigate(['/admin/blogs', id, 'edit']);
+}
+
 
   deleteBlog(id: string): void {
     if (confirm('Are you sure you want to delete this blog?')) {
