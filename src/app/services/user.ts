@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of } from 'rxjs';
+import {jwtDecode} from 'jwt-decode';
+import { Router } from '@angular/router';
 
 export interface User {
   _id?: string;
@@ -19,8 +21,9 @@ export interface User {
 export class UserService {
   private apiUrl = 'http://localhost:4000/api/auth';
   private currentUser: User | null = null;
+  private tokenTimer: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // ✅ Register user
   register(userData: User): Observable<User> {
@@ -34,22 +37,13 @@ export class UserService {
 
   // ✅ Login (optional, if you implement login API)
 // user.service.ts
-login(email: string, password: string): Observable<any> {
+login(email: string, password: string): Observable<{ token: string; user: any }> {
   return this.http.post<{ token: string; user: any }>(
     'http://localhost:4000/api/auth/login',
     { email, password }
-  ).pipe(
-    map(response => {
-      if (response?.token && response?.user) {
-        localStorage.setItem('user', JSON.stringify(response.user));
-        localStorage.setItem('token', response.token);
-        this.currentUser = response.user;
-        return response.user;
-      }
-      return null;
-    })
   );
 }
+
 
   getCurrentUser(): User | null {
     if (!this.currentUser) {
@@ -69,8 +63,30 @@ login(email: string, password: string): Observable<any> {
     return !!this.getCurrentUser();
   }
 
-  logout(): void {
+logout(isAuto = false): void {
     this.currentUser = null;
     localStorage.removeItem('user');
+    localStorage.removeItem('auth_token');
+    clearTimeout(this.tokenTimer);
+
+    if (isAuto) {
+      console.warn('Logged out automatically due to token expiration.');
+    }
+
+    this.router.navigate(['/login']);
+  }
+
+  setAutoLogoutFromToken(token: string): void {
+    try {
+      const decoded: any = jwtDecode(token);
+      const expirationTime = decoded.exp * 1000;
+      const timeout = expirationTime - Date.now();
+
+      if (timeout > 0) {
+        this.tokenTimer = setTimeout(() => this.logout(true), timeout);
+      }
+    } catch (e) {
+      console.error('Failed to decode JWT:', e);
+    }
   }
 }

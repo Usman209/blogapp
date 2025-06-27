@@ -1,15 +1,19 @@
-import { HttpClientModule } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // ✅ THIS IS REQUIRED
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterModule, FormsModule ],
+  standalone: true,
+  imports: [
+    RouterModule,
+    FormsModule,
+    HeaderComponent // ✅ <-- Add this
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'blog';
-
 }

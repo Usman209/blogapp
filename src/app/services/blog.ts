@@ -2,50 +2,59 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
-interface Blog {
-  id: number;
+export interface Blog {
+  _id: string;
   title: string;
-  authorId: number;
-  content: string;
-  createdAt: string;
-}
-
-interface Comment {
-  id: number;
-  blogId: number;
+  body: string;
+  tags?: string[];
   author: string;
-  content: string;
-  createdAt: string;
+  reactions?: {
+    likes: number;
+    dislikes: number;
+  };
+  views?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class BlogService {
-  private blogsUrl = 'data/blogs.json';
-  private commentsUrl = 'data/comments.json';
+  private apiUrl = 'http://localhost:4000/api/blog';
 
   constructor(private http: HttpClient) {}
 
-  getBlogs(): Observable<Blog[]> {
-    return this.http.get<Blog[]>(this.blogsUrl);
-  }
-
-  getBlogById(id: number): Observable<Blog | undefined> {
-    return this.getBlogs().pipe(
-      map(blogs => blogs.find(blog => blog.id === id))
+  // GET all blogs
+  getAll(): Observable<Blog[]> {
+    return this.http.get<{ code: number; message: string; body: Blog[] }>(this.apiUrl).pipe(
+      map((response) => response.body)
     );
   }
 
-  getCommentsForBlog(blogId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.commentsUrl).pipe(
-      map(comments => comments.filter(c => c.blogId === blogId))
+  // GET blog by ID
+  getById(id: string): Observable<Blog> {
+    return this.http.get<{ code: number; message: string; body: Blog }>(`${this.apiUrl}/${id}`).pipe(
+      map((response) => response.body)
     );
   }
 
-  // Simulated local comment post (in-memory only)
-  addComment(newComment: Comment): void {
-    console.log('Simulated comment save:', newComment);
-    // In a real app, you'd POST to API.
+  // CREATE blog
+  create(data: Partial<Blog>): Observable<Blog> {
+    return this.http.post<{ code: number; message: string; body: Blog }>(this.apiUrl, data).pipe(
+      map((response) => response.body)
+    );
+  }
+
+  // UPDATE blog
+  update(id: string, data: Partial<Blog>): Observable<Blog> {
+    return this.http.put<{ code: number; message: string; body: Blog }>(`${this.apiUrl}/${id}`, data).pipe(
+      map((response) => response.body)
+    );
+  }
+
+  // DELETE blog
+  delete(id: string): Observable<any> {
+    return this.http.delete<{ code: number; message: string }>(`${this.apiUrl}/${id}`);
   }
 }

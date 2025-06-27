@@ -1,0 +1,20 @@
+<div class="blog-list-header">
+  <h2>All Blogs</h2>
+  <button class="create-btn" (click)="goToCreate()">+ Create Blog</button>
+</div>
+
+<div *ngIf="loading">Loading blogs...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<div *ngIf="!loading && blogs.length === 0">No blogs found.</div>
+
+<div *ngIf="!loading && blogs.length > 0">
+  <div *ngFor="let blog of blogs" class="blog-card">
+    <h3>{{ blog.title }}</h3>
+    <p>{{ blog.body | slice:0:120 }}...</p>
+    <small>Created: {{ blog.createdAt | date:'medium' }}</small>
+    <br />
+    <button (click)="editBlog(blog._id)">✏️ Edit</button>
+    <button (click)="deleteBlog(blog._id)">🗑️ Delete</button>
+  </div>
+</div>

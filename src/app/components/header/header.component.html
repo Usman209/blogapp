@@ -1,1 +1,8 @@
-<p>header works!</p>
+<header class="header-container" *ngIf="user">
+  <div class="user-info">
+    {{ user.firstName }} {{ user.lastName }}
+  </div>
+  <div class="profile-image">
+    <img [src]="user.profileImage || defaultImage" alt="Profile" />
+  </div>
+</header>

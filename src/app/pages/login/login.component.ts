@@ -18,18 +18,36 @@ export class LoginComponent {
 
   constructor(private userService: UserService, private router: Router) {}
 
-  onLogin(): void {
-    this.errorMessage = '';
+onLogin(): void {
+  this.errorMessage = '';
 
-    this.userService.login(this.email, this.password).subscribe(user => {
-      if (user) {
-        console.log('User logged in:', user);
-        this.router.navigate([user.role === 'admin' ? '/admin' : '/']);
+  this.userService.login(this.email, this.password).subscribe({
+    next: (res) => {
+      const { token, user } = res;
+
+      if (token && user) {
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+        this.userService.setAutoLogoutFromToken(token);
+
+        // if (user.needsPasswordReset) {
+        //   this.router.navigate(['/reset-password']);
+        // } else {
+          this.router.navigate([user.role === 'ADMIN' ? '/admin' : '/']);
+        // }
       } else {
-        this.errorMessage = 'Invalid email or password';
+        this.errorMessage = 'Invalid login response';
       }
-    });
-  }
+    },
+    error: (err) => {
+      this.errorMessage = err.error?.message || 'Login failed';
+    }
+  });
+}
+
+
+
+
 
   goToRegister(): void {
     this.router.navigate(['/register']);

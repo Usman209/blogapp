@@ -1,1 +1,20 @@
-<p>blog-editor works!</p>
+<h2>{{ isEditMode ? 'Edit Blog' : 'Create Blog' }}</h2>
+
+<form [formGroup]="blogForm" (ngSubmit)="onSubmit()">
+  <label>Title</label>
+  <input type="text" formControlName="title" />
+  <div *ngIf="blogForm.get('title')?.invalid && blogForm.get('title')?.touched">
+    Title is required.
+  </div>
+
+  <label>Summary</label>
+  <input type="text" formControlName="summary" />
+
+  <label>Body</label>
+  <textarea formControlName="body"></textarea>
+  <div *ngIf="blogForm.get('body')?.invalid && blogForm.get('body')?.touched">
+    body is required.
+  </div>
+
+  <button type="submit">{{ isEditMode ? 'Update' : 'Create' }} Blog</button>
+</form>

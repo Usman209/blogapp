@@ -1,1 +1,13 @@
-<p>admin works!</p>
+<div class="admin-container">
+  <aside class="sidebar">
+    <h2>Admin Panel</h2>
+    <ul>
+      <li><a routerLink="/admin/blogs" routerLinkActive="active">Blogs</a></li>
+      <li><a routerLink="/admin/profile" routerLinkActive="active">User Profile</a></li>
+    </ul>
+  </aside>
+
+  <section class="admin-content">
+    <router-outlet></router-outlet>
+  </section>
+</div>

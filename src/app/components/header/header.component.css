@@ -1,0 +1,21 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f4f4f4;
+  padding: 12px 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-info {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.profile-image img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
