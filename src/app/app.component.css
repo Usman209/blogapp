@@ -1,13 +1,27 @@
+/* 📌 Full-height layout for sticky footer */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
 .app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
   text-align: center;
-  margin-top: 50px;
   font-family: Arial, sans-serif;
   padding: 20px;
   max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 50px auto 0;
 }
 
+/* 📌 Main content area takes available height */
+.main-content {
+  flex: 1;
+}
+
+/* 📌 Existing styles */
 .app-container .header-container {
   margin-bottom: 16px;
 }

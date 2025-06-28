@@ -48,14 +48,27 @@ export class BlogService {
   }
 
   // ✅ Get All Blogs (public OR secure depending on token)
-  getAll(): Observable<Blog[]> {
-    const headers = this.getAuthHeaders();
-    const url = headers ? this.apiUrl : `${this.apiUrl}/public`;
+getAll(page = 1, limit = 10): Observable<Blog[]> {
+  const headers = this.getAuthHeaders();
+  const url = headers
+    ? `${this.apiUrl}?page=${page}&limit=${limit}`
+    : `${this.apiUrl}/public?page=${page}&limit=${limit}`;
 
-    return this.http.get<{ code: number; message: string; body: Blog[] }>(url, {
+  return this.http
+    .get<{ code: number; message: string; body: Blog[] }>(url, {
       headers: headers || undefined
-    }).pipe(map((res) => res.body));
-  }
+    })
+    .pipe(map((res) => res.body)); // ✅ this is just the array
+}
+
+
+
+
+
+
+
+
+
 
   // ✅ Get Blog by ID (public fallback if unauthenticated)
   getById(id: string): Observable<Blog> {

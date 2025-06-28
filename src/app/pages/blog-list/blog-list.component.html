@@ -1,15 +1,16 @@
-<!-- Always visible header -->
+<!-- Blog List Header -->
 <div class="blog-list-header">
   <h2>All Blogs</h2>
   <button class="create-btn" (click)="goToCreate()">+ Create Blog</button>
 </div>
 
-<!-- Show loading -->
+<!-- Loading State -->
 <div *ngIf="loading" class="status-message">Loading blogs...</div>
 
-<!-- Show error -->
+<!-- Error State -->
 <div *ngIf="!loading && error" class="status-message error">{{ error }}</div>
 
+<!-- Blogs Table -->
 <ng-container *ngIf="!loading && blogs">
   <div *ngIf="blogs.length > 0" class="table-container">
     <table class="blog-table">
@@ -33,7 +34,15 @@
     </table>
   </div>
 
+  <!-- No Blogs Found -->
   <div *ngIf="blogs.length === 0" class="status-message">
     No blogs found.
   </div>
 </ng-container>
+
+<!-- Pagination Controls -->
+<div class="pagination-controls" *ngIf="totalPages > 1 && !loading">
+  <button [disabled]="page === 1" (click)="previousPage()">← Previous</button>
+  <span>Page {{ page }} of {{ totalPages }}</span>
+  <button [disabled]="page === totalPages" (click)="nextPage()">Next →</button>
+</div>

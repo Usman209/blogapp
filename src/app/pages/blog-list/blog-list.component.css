@@ -1,3 +1,4 @@
+/* Header Styling */
 .blog-list-header {
   display: flex;
   justify-content: space-between;
@@ -28,6 +29,7 @@
   background-color: #218838;
 }
 
+/* Loading / Error / Empty Message */
 .status-message {
   text-align: center;
   font-size: 15px;
@@ -42,14 +44,14 @@
 /* Table Styling */
 .table-container {
   overflow-x: auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .blog-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
 .blog-table th,
@@ -70,6 +72,7 @@
   color: #444;
 }
 
+/* Actions */
 .actions {
   display: flex;
   gap: 8px;
@@ -92,4 +95,33 @@
 
 .delete-btn:hover {
   background-color: #f8d7da;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.pagination-controls button {
+  padding: 6px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #e2e6ea;
+}
+
+.pagination-controls button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

@@ -1,37 +1,36 @@
 <header class="header-container">
-  <!-- Left: Home Link -->
+  <!-- 🔹 Left: Navigation -->
   <div class="left-links">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-
- <input
-    type="text"
-    class="search-input"
-    placeholder="Search..."
-    [(ngModel)]="searchQuery"
-    (keyup.enter)="onSearch()"
-  />
-
+    <a
+      routerLink="/"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      Home
+    </a>
   </div>
 
-  <!-- Right: User or Guest -->
+  <!-- 🔹 Center: Search Bar -->
+  <div class="search-wrapper">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search..."
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="onSearch()"
+    />
+  </div>
+
+  <!-- 🔹 Right: User or Guest -->
   <div class="right-section">
-    <!-- Logged-in User -->
+    <!-- 👤 Logged-in User -->
     <div
       class="user-section"
       *ngIf="user; else guest"
       tabindex="0"
       (click)="toggleDropdown()"
     >
-      <!-- <img
-        [src]="defaultImage"
-        alt="User"
-        class="user-avatar"
-        width="32"
-        height="32"
-      /> -->
-<span class="user-name">{{ getUserInitial() }}</span>
-
-
+      <span class="user-name">{{ getUserInitial() }}</span>
       <div class="dropdown-menu" *ngIf="showDropdown">
         <a *ngIf="user.role === 'ADMIN'" routerLink="/admin/dashboard">Dashboard</a>
         <a (click)="goToProfile()">Profile</a>
@@ -39,7 +38,7 @@
       </div>
     </div>
 
-    <!-- Guest View -->
+    <!-- 🙍 Guest -->
     <ng-template #guest>
       <div class="guest-actions">
         <a class="btn login-btn" (click)="goToLogin()">Log in</a>

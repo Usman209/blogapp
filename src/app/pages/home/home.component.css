@@ -1,53 +1,26 @@
-/* Section Title */
-.section-title {
-  font-size: 24px;
-  margin-bottom: 24px;
-  font-weight: bold;
-  color: #222;
-}
-
-/* Toggle Button */
-.filter-toggle {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.filter-toggle button {
-  background-color: #007bff;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  font-size: 13px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-/* Filter Button Toolbar */
+/* === Toolbar Styling === */
 .blog-toolbar {
   margin-bottom: 16px;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .filter-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 16px;
-  width: 100%;
-  max-width: 500px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .filter-buttons button {
-  padding: 6px 10px;
-  font-size: 13px;
+  padding: 6px 14px;
+  font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #f9f9f9;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s, border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .filter-buttons button:hover {
@@ -60,37 +33,41 @@
   border-color: #007bff;
 }
 
-/* Blog Tile Layout */
+/* === Blog Row Layout === */
 .blog-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-.blog-tile {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 16px;
+  padding: 0 20px 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* === Blog Row Style === */
+.blog-tile {
+  display: flex;
+  flex-direction: column;
+  padding: 18px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+  border-left: 4px solid transparent;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 
 .blog-tile:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  border-left-color: #007bff;
 }
 
-/* Blog Tile Meta Row */
+/* === Meta Info (Author + Date) === */
 .tile-meta {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
   color: #777;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 
 .tile-meta .author {
@@ -98,46 +75,47 @@
   color: #444;
 }
 
-.tile-meta .date {
-  color: #888;
+.tile-meta .timestamp {
+  color: #999;
 }
 
-/* Title */
-.tile-header .title {
+/* === Blog Title === */
+.tile-header h3 {
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   color: #222;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
-/* Read time at bottom right */
-.tile-read-time {
+/* === Excerpt / Body Snippet (optional) === */
+.excerpt {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* === Read Time (Right aligned) === */
+.tile-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 8px;
 }
 
 .read-time {
-  font-size: 12px;
-  color: #999;
+  font-size: 13px;
+  color: #888;
   font-style: italic;
 }
 
-/* Optional preview text if needed */
-.excerpt {
-  color: #555;
-  margin-bottom: 12px;
-  line-height: 1.5;
-}
-
-/* Loading and error */
+/* === Status / Messages === */
 .status-message {
   text-align: center;
   font-size: 15px;
   color: #666;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .status-message.error {
-  color: red;
+  color: #d32f2f;
 }
+

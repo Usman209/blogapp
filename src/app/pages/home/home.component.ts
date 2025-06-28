@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { BlogService, Blog } from '../../services/blog';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -12,16 +12,15 @@ import { Router, RouterModule } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   blogs: Blog[] = [];
-  loading = true;
+  loading = false;
   error = '';
+  page = 1;
+  pageSize = 10;
+  hasMore = true;
 
   selectedFilter: string = 'Latest';
   showTopFilters: boolean = false;
-
   currentYear: number = new Date().getFullYear();
-
-
-
 
   constructor(private blogService: BlogService, public router: Router) {}
 
@@ -29,46 +28,64 @@ export class HomeComponent implements OnInit {
     this.loadBlogs();
   }
 
-  loadBlogs(): void {
-    this.loading = true;
-    this.error = '';
+loadBlogs(): void {
+  if (this.loading || !this.hasMore) return;
 
-    this.blogService.getAll().subscribe({
-      next: (data) => {
-        this.blogs = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.error = 'Failed to load blogs';
-        this.loading = false;
-      }
-    });
+  this.loading = true;
+
+  this.blogService.getAll(this.page, this.pageSize).subscribe({
+    next: (data) => {
+  this.blogs = [...this.blogs, ...data]; // ✅ now correct
+  this.loading = false;
+
+  if (data.length < this.pageSize) {
+  this.hasMore = false;
+}
+
+
+  if (data.length < this.pageSize) this.hasMore = false;
+  else this.page++;
+},
+
+    error: () => {
+      this.error = 'Failed to load blogs';
+      this.loading = false;
+    }
+  });
+}
+
+
+
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const documentHeight = document.body.offsetHeight;
+    if (scrollPosition >= documentHeight - 200) {
+      this.loadBlogs();
+    }
   }
-
-  
 
   setFilter(type: string): void {
     this.selectedFilter = type;
-
-    if (type === 'Latest') {
-      this.showTopFilters = false;
-    } else {
-      this.showTopFilters = true;
-    }
-
-    this.loadBlogs();
+    this.showTopFilters = type !== 'Latest';
+    this.resetAndLoadBlogs();
   }
 
   toggleTopFilters(): void {
-    if (this.showTopFilters) {
-      this.showTopFilters = false;
-      this.selectedFilter = 'Latest';
-    } else {
-      this.showTopFilters = true;
-      this.selectedFilter = '';
-    }
+    this.showTopFilters = !this.showTopFilters;
+    this.selectedFilter = this.showTopFilters ? '' : 'Latest';
+    this.resetAndLoadBlogs();
+  }
 
+  resetAndLoadBlogs(): void {
+    this.blogs = [];
+    this.page = 1;
+    this.hasMore = true;
     this.loadBlogs();
+  }
+
+  goToDetail(blogId: string): void {
+    this.router.navigate(['/blog', blogId]);
   }
 
   calculateReadTime(text: string): number {
@@ -77,20 +94,8 @@ export class HomeComponent implements OnInit {
     return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
   }
 
-  goToDetail(blogId: string): void {
-    this.router.navigate(['/blog', blogId]);
+  getAuthorName(blog: Blog): string {
+    const author = blog.author as any;
+    return author && typeof author === 'object' ? author.firstName || 'Unknown' : 'Unknown';
   }
-
-getAuthorName(blog: Blog): string {
-  const author = blog.author as any;
-
-  if (author && typeof author === 'object') {
-    return `${author.firstName || 'Unknown'}`.trim();
-  }
-
-  // If author is not an object (e.g., just an ObjectId string)
-  return 'Unknown';
-}
-
-
 }
