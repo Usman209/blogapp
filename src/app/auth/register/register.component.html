@@ -32,23 +32,12 @@
       </select>
     </div>
 
-    <div>
-      <label for="bio">Bio</label>
-      <textarea id="bio" formControlName="bio" rows="3"></textarea>
-    </div>
-
-    <div>
-      <label for="profileImg">Profile Image URL</label>
-      <input id="profileImg" type="url" formControlName="profileImg" />
-    </div>
-
     <button type="submit" [disabled]="registerForm.invalid">Register</button>
 
     <p *ngIf="serverMessage" class="error">{{ serverMessage }}</p>
 
     <div class="login-link">
-     <a (click)="goToLogin()" style="cursor: pointer;">Login here</a>
-
+      <a (click)="goToLogin()" style="cursor: pointer;">Login here</a>
     </div>
   </form>
 </div>

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { BlogService, Blog } from '../../services/blog'; // Make sure BlogService is properly imported
+import { BlogService, Blog } from '../../services/blog';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports:[CommonModule,RouterModule],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -14,9 +15,24 @@ export class HomeComponent implements OnInit {
   loading = true;
   error = '';
 
-  constructor(private blogService: BlogService) {}
+  selectedFilter: string = 'Latest';
+  showTopFilters: boolean = false;
+
+  currentYear: number = new Date().getFullYear();
+
+
+
+
+  constructor(private blogService: BlogService, public router: Router) {}
 
   ngOnInit(): void {
+    this.loadBlogs();
+  }
+
+  loadBlogs(): void {
+    this.loading = true;
+    this.error = '';
+
     this.blogService.getAll().subscribe({
       next: (data) => {
         this.blogs = data;
@@ -28,4 +44,49 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+  
+
+  setFilter(type: string): void {
+    this.selectedFilter = type;
+
+    if (type === 'Latest') {
+      this.showTopFilters = false;
+    } else {
+      this.showTopFilters = true;
+    }
+
+    this.loadBlogs();
+  }
+
+  toggleTopFilters(): void {
+    if (this.showTopFilters) {
+      this.showTopFilters = false;
+      this.selectedFilter = 'Latest';
+    } else {
+      this.showTopFilters = true;
+      this.selectedFilter = '';
+    }
+
+    this.loadBlogs();
+  }
+
+  calculateReadTime(text: string): number {
+    const wordsPerMinute = 200;
+    const wordCount = text?.trim()?.split(/\s+/)?.length || 0;
+    return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+  }
+
+  goToDetail(blogId: string): void {
+    this.router.navigate(['/blog', blogId]);
+  }
+
+  getAuthorName(blog: Blog): string {
+  if (blog && typeof blog.author === 'object' && blog.author !== null) {
+    const author = blog.author as any;
+    return `${author.firstName}`.trim();
+  }
+  return 'Unknown';
+}
+
 }

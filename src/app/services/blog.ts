@@ -8,7 +8,14 @@ export interface Blog {
   title: string;
   body: string;
   tags?: string[];
-  author: string;
+  author: string | {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    // ... add other fields if needed
+  };
   reactions?: {
     likes: number;
     dislikes: number;
@@ -17,6 +24,7 @@ export interface Blog {
   createdAt?: string;
   updatedAt?: string;
 }
+
 
 @Injectable({
   providedIn: 'root'

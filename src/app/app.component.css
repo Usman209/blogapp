@@ -9,6 +9,11 @@
   margin-right: auto;
 }
 
+.header-container {
+  margin-bottom: 16px;
+}
+
+
 h1 {
   color: red;
   margin-bottom: 10px;

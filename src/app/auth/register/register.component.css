@@ -75,3 +75,25 @@
 .register-container .login-link a:hover {
   text-decoration: underline;
 }
+
+.register-container select {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  appearance: none; /* Hide default arrow in some browsers */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23333' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 10px 6px;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.register-container select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+

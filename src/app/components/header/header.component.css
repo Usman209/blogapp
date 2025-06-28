@@ -1,71 +1,155 @@
+/* Header Layout */
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #f3f3f3;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Left Side Navigation */
+.left-links {
+  display: flex;
+  align-items: center;
 }
 
 .left-links a {
-  margin-right: 15px;
+  font-weight: 600;
+  margin-right: 20px;
   text-decoration: none;
-  /* color: #333; */
-  color: black;
+  color: #333;
+  transition: color 0.3s ease;
 }
 
+.left-links a:hover,
+.left-links a.active {
+  color: #007bff;
+}
+
+/* Search Input */
+.search-input {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  color: #333;
+  outline: none;
+  width: 200px;
+  margin-left: 20px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+/* Right Side (User or Guest) */
 .right-section {
   display: flex;
   align-items: center;
 }
 
+/* Logged-in User Section */
 .user-section {
   position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.3s;
 }
 
-.user-name {
+.user-section:hover {
+  background-color: #f7f7f7;
+}
+
+.user-avatar {
+  border-radius: 50%;
   margin-right: 10px;
-  font-weight: bold;
+  border: 1px solid #ccc;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
 }
 
+/* User Name */
+.user-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Dropdown Menu */
 .dropdown-menu {
   position: absolute;
   right: 0;
-  top: 40px;
-  background: white;
+  top: 48px;
+  background: #ffffff;
   border: 1px solid #ddd;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  z-index: 10;
+  border-radius: 6px;
+  padding: 8px 0;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  min-width: 160px;
+  z-index: 999;
 }
 
 .dropdown-menu a {
   display: block;
-  padding: 5px 10px;
-  cursor: pointer;
+  padding: 10px 16px;
+  font-size: 14px;
   text-decoration: none;
-  color: black;
+  color: #333;
+  transition: background-color 0.2s;
 }
 
 .dropdown-menu a:hover {
-  background-color: #eee;
+  background-color: #f0f0f0;
 }
 
+/* Guest Actions */
 .guest-actions {
   display: flex;
   gap: 10px;
 }
 
-.guest-actions a {
-  background: #007bff;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 4px;
+/* Buttons */
+.btn {
+  padding: 6px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
   text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
-.guest-actions a:hover {
-  background: #0056b3;
+.login-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.login-btn:hover {
+  background-color: #0056b3;
+}
+
+.register-btn {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.register-btn:hover {
+  background-color: #5a6268;
 }

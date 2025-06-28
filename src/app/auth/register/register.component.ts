@@ -22,8 +22,8 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       gender: [''],
-      bio: [''],
-      profileImg: ['']
+      // bio: [''],
+      // profileImg: ['']
     });
     
   }

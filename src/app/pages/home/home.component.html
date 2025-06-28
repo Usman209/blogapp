@@ -1,15 +1,69 @@
-<h2>Latest Blogs</h2>
+<!-- Main Filter Buttons -->
+<div class="blog-toolbar">
+  <div class="filter-buttons">
+    <button
+      [class.active]="selectedFilter === 'Latest'"
+      (click)="setFilter('Latest')"
+    >
+      Latest
+    </button>
 
-<div *ngIf="loading">Loading blogs...</div>
-<div *ngIf="error">{{ error }}</div>
-<div *ngIf="!loading && blogs.length === 0">No blogs found.</div>
-
-<div *ngIf="!loading && blogs.length > 0">
-  <div *ngFor="let blog of blogs" class="blog-card">
-    <h3>{{ blog.title }}</h3>
-    <p>{{ blog.body | slice: 0:120 }}...</p>
-    <small>Created: {{ blog.createdAt | date:'medium' }}</small><br />
-    <a [routerLink]="['/blog', blog._id]">Read more</a>
-    <hr />
+    <button
+      [class.active]="['Weekly', 'Monthly', 'Yearly'].includes(selectedFilter)"
+      (click)="toggleTopFilters()"
+    >
+      Top
+    </button>
   </div>
 </div>
+
+<!-- Sub-options for Top -->
+<div class="blog-toolbar" *ngIf="showTopFilters">
+  <div class="filter-buttons">
+    <button
+      *ngFor="let type of ['Weekly', 'Monthly', 'Yearly']"
+      [class.active]="selectedFilter === type"
+      (click)="setFilter(type)"
+    >
+      {{ type }}
+    </button>
+  </div>
+</div>
+
+<!-- Loading / Error Messages -->
+<div *ngIf="loading" class="status-message">Loading blogs...</div>
+<div *ngIf="error" class="status-message error">{{ error }}</div>
+<div *ngIf="!loading && blogs.length === 0" class="status-message">No blogs found.</div>
+
+<!-- Blog List -->
+<div *ngIf="!loading && blogs.length > 0" class="blog-grid">
+  <div
+    *ngFor="let blog of blogs"
+    class="blog-tile"
+    (click)="goToDetail(blog._id)"
+  >
+    <!-- Meta Info -->
+    <div class="tile-meta">
+      <span class="author">{{ getAuthorName(blog) }}</span>
+      <span class="timestamp">{{ blog.createdAt | date: 'mediumDate' }}</span>
+    </div>
+
+    <!-- Blog Title -->
+    <div class="tile-header">
+      <h3>{{ blog.title }}</h3>
+    </div>
+
+    <!-- Read Time -->
+    <div class="tile-footer">
+      <span class="read-time">{{ calculateReadTime(blog.body) }} min read</span>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="app-footer">
+  <div class="footer-content">
+    <p>&copy; {{ currentYear }} My Blog. All rights reserved.</p>
+   
+  </div>
+</footer>
