@@ -81,12 +81,16 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/blog', blogId]);
   }
 
-  getAuthorName(blog: Blog): string {
-  if (blog && typeof blog.author === 'object' && blog.author !== null) {
-    const author = blog.author as any;
-    return `${author.firstName}`.trim();
+getAuthorName(blog: Blog): string {
+  const author = blog.author as any;
+
+  if (author && typeof author === 'object') {
+    return `${author.firstName || 'Unknown'}`.trim();
   }
+
+  // If author is not an object (e.g., just an ObjectId string)
   return 'Unknown';
 }
+
 
 }

@@ -1,28 +1,39 @@
+<!-- Always visible header -->
 <div class="blog-list-header">
   <h2>All Blogs</h2>
   <button class="create-btn" (click)="goToCreate()">+ Create Blog</button>
 </div>
 
+<!-- Show loading -->
 <div *ngIf="loading" class="status-message">Loading blogs...</div>
-<div *ngIf="error" class="status-message error">{{ error }}</div>
 
-<div *ngIf="!loading && blogs.length === 0" class="status-message">No blogs found.</div>
+<!-- Show error -->
+<div *ngIf="!loading && error" class="status-message error">{{ error }}</div>
 
-<div *ngIf="!loading && blogs.length > 0" class="blog-grid">
-  <div *ngFor="let blog of blogs" class="blog-tile">
-    <div class="tile-header">
-      <h3>{{ blog.title }}</h3>
-    </div>
-
-    <p class="excerpt">{{ blog.body | slice:0:120 }}...</p>
-
-    <div class="tile-footer">
-      <small class="timestamp">Created: {{ blog.createdAt | date: 'medium' }}</small>
-      <div class="tile-actions">
-        <button class="edit-btn" (click)="editBlog(blog._id)">✏️</button>
-        <button class="delete-btn" (click)="deleteBlog(blog._id)">🗑️</button>
-      </div>
-    </div>
+<ng-container *ngIf="!loading && blogs">
+  <div *ngIf="blogs.length > 0" class="table-container">
+    <table class="blog-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let blog of blogs">
+          <td>{{ blog.title }}</td>
+          <td>{{ blog.createdAt | date: 'mediumDate' }}</td>
+          <td class="actions">
+            <button class="edit-btn" (click)="editBlog(blog._id)">✏️</button>
+            <button class="delete-btn" (click)="deleteBlog(blog._id)">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</div>
 
+  <div *ngIf="blogs.length === 0" class="status-message">
+    No blogs found.
+  </div>
+</ng-container>

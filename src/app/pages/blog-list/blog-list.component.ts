@@ -20,6 +20,8 @@ export class BlogListComponent {
   ngOnInit(): void {
     this.blogService.getAll().subscribe({
       next: (data) => {
+        console.log(data);
+        
         this.blogs = data;
         this.loading = false;
       },
