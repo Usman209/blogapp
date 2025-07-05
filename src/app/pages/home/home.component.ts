@@ -2,11 +2,12 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { BlogService, Blog } from '../../services/blog';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { HighlightDirective } from '../../directives/highlight.directive';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,HighlightDirective],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

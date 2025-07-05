@@ -41,6 +41,7 @@
     *ngFor="let blog of blogs"
     class="blog-tile"
     (click)="goToDetail(blog._id)"
+    appHighlight
   >
     <!-- 👤 Author & Date -->
     <div class="tile-meta">
@@ -59,5 +60,3 @@
     </div>
   </div>
 </div>
-
-
