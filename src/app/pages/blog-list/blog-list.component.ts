@@ -17,6 +17,7 @@ export class BlogListComponent implements OnInit {
   page = 1;
   pageSize = 10;
   totalPages = 1;
+  totalBlogs = 0;
 
   constructor(private blogService: BlogService, private router: Router) {}
 
@@ -29,12 +30,9 @@ export class BlogListComponent implements OnInit {
 
     this.blogService.getAll(this.page, this.pageSize).subscribe({
       next: (data) => {
-        this.blogs = data;
-
-        // ✅ Simulate total count (e.g. from backend)
-        const simulatedTotalCount = 47; // Replace with actual total if available
-        this.totalPages = Math.ceil(simulatedTotalCount / this.pageSize);
-
+        this.blogs = data.blogs;
+        this.totalBlogs = data.total;
+        this.totalPages = Math.ceil(this.totalBlogs / this.pageSize);
         this.loading = false;
       },
       error: () => {
@@ -70,6 +68,14 @@ export class BlogListComponent implements OnInit {
     if (confirm('Are you sure you want to delete this blog?')) {
       this.blogService.delete(id).subscribe(() => {
         this.blogs = this.blogs.filter((b) => b._id !== id);
+        this.totalBlogs--;
+        this.totalPages = Math.ceil(this.totalBlogs / this.pageSize);
+
+        // Optional: Load next page if the current one becomes empty
+        if (this.blogs.length === 0 && this.page > 1) {
+          this.page--;
+          this.loadBlogs();
+        }
       });
     }
   }

@@ -2,17 +2,22 @@
   <div *ngIf="loading" class="status-message">Loading blog...</div>
   <div *ngIf="error" class="status-message error">{{ error }}</div>
 
-  <div *ngIf="!loading && blog" class="blog-content">
-    <h2 class="blog-title">{{ blog.title }}</h2>
+  <div *ngIf="!loading && blog()" class="blog-content">
+    <h2 class="blog-title">{{ blog()?.title }}</h2>
 
     <p class="publish-info">
-      <strong>Published:</strong> {{ blog.createdAt | date: 'medium' }}
+      <strong>Published:</strong> {{ blog()?.createdAt | date: 'medium' }}
     </p>
+
+    <div class="reactions">
+      <button (click)="likeBlog()">👍 {{ blog()?.reactions?.likes }}</button>
+      <button (click)="dislikeBlog()">👎 {{ blog()?.reactions?.dislikes }}</button>
+    </div>
 
     <hr />
 
     <p class="blog-body">
-      {{ blog.body }}
+      {{ blog()?.body }}
     </p>
   </div>
 </div>

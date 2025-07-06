@@ -1,13 +1,20 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  OnInit,
+  PLATFORM_ID
+} from '@angular/core';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { BlogService, Blog } from '../../services/blog';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
 import { HighlightDirective } from '../../directives/highlight.directive';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule,HighlightDirective],
+  imports: [CommonModule, RouterModule, HighlightDirective],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -23,39 +30,71 @@ export class HomeComponent implements OnInit {
   showTopFilters: boolean = false;
   currentYear: number = new Date().getFullYear();
 
-  constructor(private blogService: BlogService, public router: Router) {}
+  isAdminView = false;
+  currentUserId: string | null = null;
+
+  constructor(
+    private blogService: BlogService,
+    public router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   ngOnInit(): void {
+    // ✅ Watch route changes
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.detectViewMode();
+        this.resetAndLoadBlogs();
+      });
+
+    this.detectViewMode();
     this.loadBlogs();
   }
 
-loadBlogs(): void {
-  if (this.loading || !this.hasMore) return;
+  detectViewMode(): void {
+    const path = this.router.url;
+    this.isAdminView = path.startsWith('/admin');
 
-  this.loading = true;
-
-  this.blogService.getAll(this.page, this.pageSize).subscribe({
-    next: (data) => {
-  this.blogs = [...this.blogs, ...data]; // ✅ now correct
-  this.loading = false;
-
-  if (data.length < this.pageSize) {
-  this.hasMore = false;
-}
-
-
-  if (data.length < this.pageSize) this.hasMore = false;
-  else this.page++;
-},
-
-    error: () => {
-      this.error = 'Failed to load blogs';
-      this.loading = false;
+    if (isPlatformBrowser(this.platformId)) {
+      const user = JSON.parse(localStorage.getItem('user') || 'null');
+      this.currentUserId = user?._id || null;
+    } else {
+      this.currentUserId = null;
     }
-  });
-}
+  }
 
+  loadBlogs(): void {
+    if (this.loading || !this.hasMore) return;
 
+    this.loading = true;
+
+    this.blogService.getAll(this.page, this.pageSize, true) // 👈 forcePublic = true
+.subscribe({
+      next: (data) => {
+        let result = data.blogs;
+
+        // ✅ Filter blogs by user if in admin view
+        if (this.isAdminView && this.currentUserId) {
+          result = result.filter((b: Blog) => {
+            const authorId = (b.author as any)?._id || b.createdBy;
+            return authorId === this.currentUserId;
+          });
+        }
+
+        this.blogs = [...this.blogs, ...result];
+        this.loading = false;
+
+        // ✅ Check if more blogs to load
+        if (result.length < this.pageSize) this.hasMore = false;
+        else this.page++;
+      },
+      error: () => {
+        this.error = 'Failed to load blogs';
+        this.loading = false;
+      }
+    });
+  }
 
   @HostListener('window:scroll', [])
   onScroll(): void {
@@ -97,6 +136,8 @@ loadBlogs(): void {
 
   getAuthorName(blog: Blog): string {
     const author = blog.author as any;
-    return author && typeof author === 'object' ? author.firstName || 'Unknown' : 'Unknown';
+    return author && typeof author === 'object'
+      ? `${author.firstName ?? 'Unknown'}`
+      : 'Unknown';
   }
 }
