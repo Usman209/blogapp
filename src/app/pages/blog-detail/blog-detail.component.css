@@ -56,3 +56,37 @@ hr {
 .status-message.error {
   color: red;
 }
+
+.reaction-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.reaction-buttons button {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.reaction-buttons button:hover {
+  background-color: #e8e8e8;
+  border-color: #aaa;
+}
+
+.reaction-buttons button.active {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.reaction-buttons span {
+  font-size: 14px;
+}

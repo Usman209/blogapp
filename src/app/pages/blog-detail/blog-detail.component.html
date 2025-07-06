@@ -1,23 +1,60 @@
-<div class="blog-container">
-  <div *ngIf="loading" class="status-message">Loading blog...</div>
-  <div *ngIf="error" class="status-message error">{{ error }}</div>
+<!-- 🔄 Loading / Error States -->
+<div *ngIf="loading" class="status-message">Loading blog...</div>
+<div *ngIf="error" class="status-message error">{{ error }}</div>
 
-  <div *ngIf="!loading && blog()" class="blog-content">
-    <h2 class="blog-title">{{ blog()?.title }}</h2>
+<!-- 📝 Blog Content -->
+<div *ngIf="!loading && blog() as currentBlog" class="blog-detail">
+  <!-- Title -->
+  <h1 class="blog-title">{{ currentBlog.title }}</h1>
 
-    <p class="publish-info">
-      <strong>Published:</strong> {{ blog()?.createdAt | date: 'medium' }}
-    </p>
+  <!-- Meta Info -->
+  <div class="meta">
+    <span>By {{ currentBlog.author?.firstName || 'Unknown' }}</span>
+    <span>• {{ currentBlog.createdAt | date: 'medium' }}</span>
+  </div>
 
-    <div class="reactions">
-      <button (click)="likeBlog()">👍 {{ blog()?.reactions?.likes }}</button>
-      <button (click)="dislikeBlog()">👎 {{ blog()?.reactions?.dislikes }}</button>
+  <!-- Blog Body -->
+  <div class="content" [innerHTML]="currentBlog.body"></div>
+
+  <!-- 👍👎 Reactions -->
+  <div class="reaction-buttons">
+    <button (click)="likeBlog()" [class.active]="hasLiked()">
+      👍 Like {{ likeCount() }} <span *ngIf="hasLiked()">✅</span>
+    </button>
+    <button (click)="dislikeBlog()" [class.active]="hasDisliked()">
+      👎 Dislike {{ dislikeCount() }} <span *ngIf="hasDisliked()">✅</span>
+    </button>
+  </div>
+
+  <!-- 💬 Comments -->
+  <div class="comment-section">
+    <h3>Comments</h3>
+
+    <!-- New Comment -->
+    <div *ngIf="userId" class="new-comment">
+      <textarea [(ngModel)]="newComment" rows="3" placeholder="Write a comment..."></textarea>
+      <button (click)="postComment()" [disabled]="postingComment || !newComment.trim()">
+        {{ postingComment ? 'Posting...' : 'Post Comment' }}
+      </button>
     </div>
 
-    <hr />
+    <div *ngIf="!userId">
+      <p><a routerLink="/login">Log in</a> to post a comment.</p>
+    </div>
 
-    <p class="blog-body">
-      {{ blog()?.body }}
-    </p>
+    <!-- Existing Comments -->
+    <div *ngIf="(currentBlog.comments?.length ?? 0) > 0; else noComments">
+      <div *ngFor="let c of currentBlog.comments" class="comment">
+        <strong>
+{{ c.author ? (c.author.firstName + ' ' + c.author.lastName) : 'Anonymous' }}
+        </strong>
+        <span>• {{ c.createdAt | date: 'short' }}</span>
+        <p>{{ c.content }}</p>
+      </div>
+    </div>
+
+    <ng-template #noComments>
+      <p>No comments yet.</p>
+    </ng-template>
   </div>
 </div>
