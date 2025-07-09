@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ✅ Watch route changes
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -69,12 +68,10 @@ export class HomeComponent implements OnInit {
 
     this.loading = true;
 
-    this.blogService.getAll(this.page, this.pageSize, true) // 👈 forcePublic = true
-.subscribe({
+    this.blogService.getAll(this.page, this.pageSize, true).subscribe({
       next: (data) => {
         let result = data.blogs;
 
-        // ✅ Filter blogs by user if in admin view
         if (this.isAdminView && this.currentUserId) {
           result = result.filter((b: Blog) => {
             const authorId = (b.author as any)?._id || b.createdBy;
@@ -85,7 +82,6 @@ export class HomeComponent implements OnInit {
         this.blogs = [...this.blogs, ...result];
         this.loading = false;
 
-        // ✅ Check if more blogs to load
         if (result.length < this.pageSize) this.hasMore = false;
         else this.page++;
       },

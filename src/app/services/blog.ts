@@ -34,9 +34,13 @@ export interface Blog {
   };
   views?: number;
   comments?: Comment[];
+  likesCount?: number;       // ✅ added
+  dislikesCount?: number;    // ✅ optional
+  commentsCount?: number;    // ✅ added
   createdAt?: string;
   updatedAt?: string;
 }
+
 
 export interface BlogResponse {
   blogs: Blog[];

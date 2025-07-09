@@ -2,7 +2,11 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../services/user';
+import { Store } from '@ngrx/store';
+import { login } from '../../stores/auth/auth.actions';
+import { selectAuthError, selectIsAuthenticated } from '../../stores/auth/auth.selectors';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -14,38 +18,25 @@ import { UserService } from '../../services/user';
 export class LoginComponent {
   email = '';
   password = '';
-  errorMessage = '';
+  errorMessage$!: Observable<string | null>;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private store: Store, private router: Router) {
+    // Automatically redirect on login success
+    this.store.select(selectIsAuthenticated).pipe(
+      tap((isLoggedIn) => {
+        if (isLoggedIn) {
+          this.router.navigate(['/admin/blogs']);
+        }
+      })
+    ).subscribe();
 
-onLogin(): void {
-  this.errorMessage = '';
+    // Get login errors
+    this.errorMessage$ = this.store.select(selectAuthError);
+  }
 
-  this.userService.login(this.email, this.password).subscribe({
-    next: (res) => {
-      const { token, user } = res;
-
-      if (token && user) {
-        localStorage.setItem('auth_token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        this.userService.setAutoLogoutFromToken(token);
-
-        // 🔄 Redirect everyone to /admin/blogs after login
-        this.router.navigate(['/admin/blogs']);
-      } else {
-        this.errorMessage = 'Invalid login response';
-      }
-    },
-    error: (err) => {
-      this.errorMessage = err.error?.message || 'Login failed';
-    }
-  });
-}
-
-
-
-
-
+  onLogin(): void {
+    this.store.dispatch(login({ email: this.email, password: this.password }));
+  }
 
   goToRegister(): void {
     this.router.navigate(['/register']);

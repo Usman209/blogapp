@@ -14,7 +14,7 @@
 
     <button type="submit">Login</button>
 
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+<p *ngIf="errorMessage$ | async as error" class="error">{{ error }}</p>
 
     <div class="register-link">
       Don't have an account?

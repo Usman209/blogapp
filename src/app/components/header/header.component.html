@@ -23,20 +23,21 @@
 
   <!-- 🔹 Right: User or Guest -->
   <div class="right-section">
-    <!-- 👤 Logged-in User -->
-    <div
-      class="user-section"
-      *ngIf="user; else guest"
-      tabindex="0"
-      (click)="toggleDropdown()"
-    >
-      <span class="user-name">{{ getUserInitial() }}</span>
-      <div class="dropdown-menu" *ngIf="showDropdown">
-        <a *ngIf="user.role === 'ADMIN'" routerLink="/admin/dashboard">Dashboard</a>
-        <a (click)="goToProfile()">Profile</a>
-        <a (click)="logout()">Logout</a>
+    <ng-container *ngIf="user$ | async as user; else guest">
+      <!-- 👤 Logged-in User -->
+      <div
+        class="user-section"
+        tabindex="0"
+        (click)="toggleDropdown()"
+      >
+        <span class="user-name">{{ getUserInitial(user) }}</span>
+        <div class="dropdown-menu" *ngIf="showDropdown">
+          <a *ngIf="user.role === 'ADMIN'" routerLink="/admin/dashboard">Dashboard</a>
+          <a (click)="goToProfile()">Profile</a>
+          <a (click)="logout()">Logout</a>
+        </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- 🙍 Guest -->
     <ng-template #guest>

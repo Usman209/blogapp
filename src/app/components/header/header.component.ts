@@ -1,47 +1,47 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { UserService, User } from '../../services/user';
 import { FormsModule } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
+import { User } from '../../model/user.model';
+import { logout } from '../../stores/auth/auth.actions';
+import { selectUser, selectIsLoggedIn } from '../../stores/auth/auth.selectors';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule,FormsModule ],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  user: User | null = null;
+  user$!: Observable<User | null>;
   isAdmin: boolean = false;
-  defaultImage = 'assets/default-user.png';
   showDropdown = false;
-  isBrowser: boolean;
   searchQuery: string = '';
 
-  constructor(
-    private router: Router,
-    private userService: UserService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isBrowser = isPlatformBrowser(platformId);
+  constructor(private router: Router, private store: Store) {
+    this.user$ = this.store.select(selectUser);
 
-    // Subscribe to user changes
-    this.userService.user$.subscribe(user => {
-      this.user = user;
+    this.user$.subscribe(user => {
       this.isAdmin = user?.role === 'ADMIN';
+    });
+
+    // 🔁 Redirect after logout
+    this.store.select(selectIsLoggedIn).subscribe(isLoggedIn => {
+      if (!isLoggedIn) {
+        this.router.navigate(['/login']);
+      }
     });
   }
 
-
   onSearch(): void {
-  if (this.searchQuery.trim()) {
-    // For now, just log or navigate
-    console.log('Searching for:', this.searchQuery);
-    // Example: navigate to a search page with query param
-    this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search'], { queryParams: { q: this.searchQuery } });
+    }
   }
-}
 
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
@@ -53,7 +53,7 @@ export class HeaderComponent {
   }
 
   logout(): void {
-    this.userService.logout(); // handles localStorage + user$
+    this.store.dispatch(logout());
     this.showDropdown = false;
   }
 
@@ -65,11 +65,7 @@ export class HeaderComponent {
     this.router.navigate(['/register']);
   }
 
-
-
- getUserInitial(): string {
-  return this.user?.firstName?.charAt(0).toUpperCase() || '';
-}
-
-
+  getUserInitial(user: User | null): string {
+    return user?.firstName?.charAt(0).toUpperCase() || '';
+  }
 }

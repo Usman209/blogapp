@@ -1,10 +1,7 @@
 <!-- 📌 Filter Bar -->
 <div class="blog-toolbar">
   <div class="filter-buttons">
-    <button
-      [class.active]="selectedFilter === 'Latest'"
-      (click)="setFilter('Latest')"
-    >
+    <button [class.active]="selectedFilter === 'Latest'" (click)="setFilter('Latest')">
       Latest
     </button>
 
@@ -54,9 +51,11 @@
       <h3>{{ blog.title }}</h3>
     </div>
 
-    <!-- ⏱️ Read Time -->
+    <!-- ⏱️ Read Time + Reactions -->
     <div class="tile-footer">
       <span class="read-time">{{ calculateReadTime(blog.body) }} min read</span>
+      <span class="reaction-count">👍 {{ blog.likesCount || 0 }}</span>
+      <span class="reaction-count">💬 {{ blog.commentsCount || 0 }}</span>
     </div>
   </div>
 </div>
